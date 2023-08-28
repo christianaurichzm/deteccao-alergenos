@@ -1,6 +1,6 @@
 import pandas as pd
 from IPython.core.display_functions import display
-from owlready2 import get_ontology, sync_reasoner
+from owlready2 import get_ontology, sync_reasoner, default_world
 import re
 from unidecode import unidecode
 
@@ -32,13 +32,29 @@ def preprocess_data(df):
 
 
 def load_allergens_from_ontology(ontology_path):
-    onto = get_ontology(ontology_path).load()
-    allergens = set()
+    get_ontology(ontology_path).load()
     sync_reasoner()
-    for cls_label in ["Alérgeno", "Alérgeno por Derivação"]:
-        cls = onto.search_one(label=cls_label)
-        for instance in cls.instances():
-            allergens.add(unidecode(instance.label.first().lower()))
+    query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX food: <http://example.org/food#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+        SELECT ?label
+        WHERE {
+          {
+             ?individuo rdf:type food:Alergeno .
+             ?individuo rdfs:label ?label .
+           }
+           UNION
+           {
+             ?individuo rdf:type food:AlergenoPorDerivacao .
+             ?individuo rdfs:label ?label .
+            }
+        }
+    """
+    results = list(default_world.sparql(query))
+    allergens = set(unidecode(label[0].lower()) for label in results)
     return allergens
 
 
@@ -48,7 +64,9 @@ def main():
 
     allergens_set = load_allergens_from_ontology("ontologia.owl")
 
-    df['alergenos'] = df['ingredients_text_pt'].apply(lambda x: detect_allergens(extract_ingredients(x), allergens_set))
+    df['alergenos'] = df['ingredients_text_pt'].apply(
+        lambda x: detect_allergens(extract_ingredients(x), allergens_set)
+    )
     return df
 
 
