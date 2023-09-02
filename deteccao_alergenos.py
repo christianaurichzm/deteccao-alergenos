@@ -37,7 +37,7 @@ def load_allergens_from_ontology(ontology_path, query_path="query_alergenos.spar
     with open(query_path, "r") as file:
         query = file.read()
     results = list(default_world.sparql(query))
-    allergens = set(unidecode(label[0].lower()) for label in results)
+    allergens = set(unidecode(label.lower()) for [label] in results)
     return allergens
 
 
