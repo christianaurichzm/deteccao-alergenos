@@ -31,28 +31,11 @@ def preprocess_data(df):
     return df
 
 
-def load_allergens_from_ontology(ontology_path):
+def load_allergens_from_ontology(ontology_path, query_path="query_alergenos.sparql"):
     get_ontology(ontology_path).load()
     sync_reasoner()
-    query = """
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        PREFIX food: <http://example.org/food#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    
-        SELECT ?label
-        WHERE {
-          {
-             ?individuo rdf:type food:Alergeno .
-             ?individuo rdfs:label ?label .
-           }
-           UNION
-           {
-             ?individuo rdf:type food:AlergenoPorDerivacao .
-             ?individuo rdfs:label ?label .
-            }
-        }
-    """
+    with open(query_path, "r") as file:
+        query = file.read()
     results = list(default_world.sparql(query))
     allergens = set(unidecode(label[0].lower()) for label in results)
     return allergens
