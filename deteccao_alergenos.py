@@ -8,9 +8,9 @@ from thefuzz import fuzz
 from unidecode import unidecode
 
 
-class Algorithm(Enum):
-    MATCH = 1
-    LEVENSHTEIN = 2
+class Algorithms(Enum):
+    MATCH = "match"
+    LEVENSHTEIN = "levenshtein"
 
 
 def load_data(file_path):
@@ -31,11 +31,11 @@ def detect_allergens(ingredients, allergens_set, algorithm):
     for ingredient in ingredients:
         for allergen in allergens_set:
             match algorithm:
-                case Algorithm.MATCH:
+                case Algorithms.MATCH:
                     if allergen in ingredient:
                         detected_allergens.append(ingredient)
                         break
-                case Algorithm.LEVENSHTEIN:
+                case Algorithms.LEVENSHTEIN:
                     if levenshtein_distance(ingredient, allergen) > 80:
                         detected_allergens.append(ingredient)
                         break
@@ -71,15 +71,11 @@ def main():
 
     allergens_set = load_allergens_from_ontology("ontologia.owl")
 
-    df['alergenos_match'] = df['ingredients_text_pt'].apply(
-        lambda x: detect_allergens(extract_ingredients(
-            x), allergens_set, Algorithm.MATCH)
-    )
-
-    df['alergenos_levenshtein'] = df['ingredients_text_pt'].apply(
-        lambda x: detect_allergens(extract_ingredients(
-            x), allergens_set, Algorithm.LEVENSHTEIN)
-    )
+    for algorithm in Algorithms:
+        df[f'alergenos_{algorithm.value}'] = df['ingredients_text_pt'].apply(
+            lambda x: detect_allergens(extract_ingredients(
+                x), allergens_set, algorithm)
+        )
 
     return df
 
