@@ -1,7 +1,7 @@
+import re
 import pandas as pd
 from IPython.core.display_functions import display
 from owlready2 import get_ontology, sync_reasoner, default_world
-import re
 from unidecode import unidecode
 
 
@@ -20,14 +20,14 @@ def detect_allergens(ingredients, allergens_set):
 
 def preprocess_data(df):
     df.dropna(subset=['ingredients_text_pt'], inplace=True)
-    df['ingredients_text_pt'] = df['ingredients_text_pt'].str.lower()
-    df['ingredients_text_pt'] = df['ingredients_text_pt'].str.strip()
-    df['ingredients_text_pt'] = df['ingredients_text_pt'].apply(unidecode)
-    df['ingredients_text_pt'] = df['ingredients_text_pt'].replace({
-        '[^a-zA-Záéíóúçãõôê\\s,]': '',
-        ',+': ',',
-        ' +': ' '
-    }, regex=True)
+    df['ingredients_text_pt'] = (df['ingredients_text_pt'].apply(unidecode)
+                                 .str.lower()
+                                 .str.strip()
+                                 .replace({
+                                     '[^a-zA-Z\\s,]': '',
+                                     ',+': ',',
+                                     ' +': ' '
+                                 }, regex=True))
     return df
 
 
