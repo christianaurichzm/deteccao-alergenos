@@ -1,8 +1,16 @@
 import re
+from enum import Enum
+
 import pandas as pd
 from IPython.core.display_functions import display
 from owlready2 import get_ontology, sync_reasoner, default_world
+from thefuzz import fuzz
 from unidecode import unidecode
+
+
+class Algorithm(Enum):
+    MATCH = 1
+    LEVENSHTEIN = 2
 
 
 def load_data(file_path):
@@ -14,8 +22,24 @@ def extract_ingredients(text):
     return [ingredient.strip() for ingredient in re.split(pattern, text)]
 
 
-def detect_allergens(ingredients, allergens_set):
-    return [ingredient for ingredient in ingredients if any(allergen in ingredient for allergen in allergens_set)]
+def levenshtein_distance(ingredient, allergen):
+    return fuzz.ratio(ingredient, allergen)
+
+
+def detect_allergens(ingredients, allergens_set, algorithm):
+    detected_allergens = []
+    for ingredient in ingredients:
+        for allergen in allergens_set:
+            match algorithm:
+                case Algorithm.MATCH:
+                    if allergen in ingredient:
+                        detected_allergens.append(ingredient)
+                        break
+                case Algorithm.LEVENSHTEIN:
+                    if levenshtein_distance(ingredient, allergen) > 80:
+                        detected_allergens.append(ingredient)
+                        break
+    return detected_allergens
 
 
 def preprocess_data(df):
@@ -47,9 +71,16 @@ def main():
 
     allergens_set = load_allergens_from_ontology("ontologia.owl")
 
-    df['alergenos'] = df['ingredients_text_pt'].apply(
-        lambda x: detect_allergens(extract_ingredients(x), allergens_set)
+    df['alergenos_match'] = df['ingredients_text_pt'].apply(
+        lambda x: detect_allergens(extract_ingredients(
+            x), allergens_set, Algorithm.MATCH)
     )
+
+    df['alergenos_levenshtein'] = df['ingredients_text_pt'].apply(
+        lambda x: detect_allergens(extract_ingredients(
+            x), allergens_set, Algorithm.LEVENSHTEIN)
+    )
+
     return df
 
 
