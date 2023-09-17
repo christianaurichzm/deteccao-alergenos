@@ -9,6 +9,9 @@ from torch.nn.functional import cosine_similarity
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
 from tqdm import tqdm
+import cachetools
+
+cache = cachetools.LFUCache(maxsize=1000)
 
 
 class Algorithms(Enum):
@@ -36,10 +39,19 @@ def levenshtein_distance(ingredient, allergen):
 
 
 def sentences_to_embeddings_bert(sentences):
+    hash_key = hash(sentences)
+
+    if hash_key in cache:
+        return cache[hash_key]
+
     inputs = tokenizerBert(sentences, return_tensors="pt",
                            padding=True, truncation=True, max_length=128)
     outputs = modelBert(**inputs)
-    return outputs.last_hidden_state.mean(dim=1)
+    embedding = outputs.last_hidden_state.mean(dim=1)
+
+    cache[hash_key] = embedding
+
+    return embedding
 
 
 def bert_similarity(ingredient, allergen):
