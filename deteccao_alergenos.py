@@ -8,6 +8,7 @@ from thefuzz import fuzz
 from torch.nn.functional import cosine_similarity
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
+from tqdm import tqdm
 
 
 class Algorithms(Enum):
@@ -88,13 +89,14 @@ def load_allergens_from_ontology(ontology_path, query_path="query_alergenos.spar
 
 
 def main():
+    tqdm.pandas()
     df = load_data('openfoodfacts_export.csv')
     df = preprocess_data(df)
 
     allergens_set = load_allergens_from_ontology("ontologia.owl")
 
     for algorithm in Algorithms:
-        df[f'alergenos_{algorithm.value}'] = df['ingredients_text_pt'].apply(
+        df[f'alergenos_{algorithm.value}'] = df['ingredients_text_pt'].progress_apply(
             lambda x: detect_allergens(extract_ingredients(
                 x), allergens_set, algorithm)
         )
