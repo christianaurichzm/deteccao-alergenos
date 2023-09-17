@@ -5,12 +5,20 @@ import pandas as pd
 from IPython.core.display_functions import display
 from owlready2 import get_ontology, sync_reasoner, default_world
 from thefuzz import fuzz
+from torch.nn.functional import cosine_similarity
+from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
 
 
 class Algorithms(Enum):
     MATCH = "match"
     LEVENSHTEIN = "levenshtein"
+    BERT = "bert"
+
+
+tokenizerBert = BertTokenizer.from_pretrained(
+    "neuralmind/bert-large-portuguese-cased")
+modelBert = BertModel.from_pretrained("neuralmind/bert-large-portuguese-cased")
 
 
 def load_data(file_path):
@@ -26,19 +34,33 @@ def levenshtein_distance(ingredient, allergen):
     return fuzz.ratio(ingredient, allergen)
 
 
+def sentences_to_embeddings_bert(sentences):
+    inputs = tokenizerBert(sentences, return_tensors="pt",
+                           padding=True, truncation=True, max_length=128)
+    outputs = modelBert(**inputs)
+    return outputs.last_hidden_state.mean(dim=1)
+
+
+def bert_similarity(ingredient, allergen):
+    ingredient_embedding = sentences_to_embeddings_bert(ingredient)
+    allergen_embedding = sentences_to_embeddings_bert(allergen)
+
+    return cosine_similarity(ingredient_embedding, allergen_embedding)
+
+
+def is_allergen_present(ingredient, allergen, algorithm):
+    match algorithm:
+        case Algorithms.MATCH:
+            return allergen in ingredient
+        case Algorithms.LEVENSHTEIN:
+            return levenshtein_distance(ingredient, allergen) > 80
+        case Algorithms.BERT:
+            return bert_similarity(ingredient, allergen) > 0.92
+
+
 def detect_allergens(ingredients, allergens_set, algorithm):
-    detected_allergens = []
-    for ingredient in ingredients:
-        for allergen in allergens_set:
-            match algorithm:
-                case Algorithms.MATCH:
-                    if allergen in ingredient:
-                        detected_allergens.append(ingredient)
-                        break
-                case Algorithms.LEVENSHTEIN:
-                    if levenshtein_distance(ingredient, allergen) > 80:
-                        detected_allergens.append(ingredient)
-                        break
+    detected_allergens = [ingredient for ingredient in ingredients
+                          if any(is_allergen_present(ingredient, allergen, algorithm) for allergen in allergens_set)]
     return detected_allergens
 
 
