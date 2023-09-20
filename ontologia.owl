@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
-    xml:base="http://www.w3.org/2002/07/owl"
-    xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:xml="http://www.w3.org/XML/1998/namespace"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-    xmlns:food="http://example.org/food#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-    <Ontology />
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:food="http://example.org/food#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <Ontology/>
+    
 
 
     <!-- 
@@ -18,14 +19,17 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
 
     <!-- http://example.org/food#eDerivadoDe -->
 
     <ObjectProperty rdf:about="http://example.org/food#eDerivadoDe">
-        <rdfs:domain rdf:resource="http://example.org/food#Alimento" />
-        <rdfs:range rdf:resource="http://example.org/food#Alimento" />
+        <rdfs:domain rdf:resource="http://example.org/food#Alimento"/>
+        <rdfs:range rdf:resource="http://example.org/food#Alimento"/>
         <rdfs:label>é derivado de</rdfs:label>
     </ObjectProperty>
+    
 
 
     <!-- 
@@ -36,13 +40,16 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
 
     <!-- http://example.org/food#Alergeno -->
 
     <Class rdf:about="http://example.org/food#Alergeno">
-        <rdfs:subClassOf rdf:resource="http://example.org/food#Alimento" />
+        <rdfs:subClassOf rdf:resource="http://example.org/food#Alimento"/>
         <rdfs:label>Alérgeno</rdfs:label>
     </Class>
+    
 
 
     <!-- http://example.org/food#AlergenoPorDerivacao -->
@@ -50,13 +57,14 @@
     <Class rdf:about="http://example.org/food#AlergenoPorDerivacao">
         <equivalentClass>
             <Restriction>
-                <onProperty rdf:resource="http://example.org/food#eDerivadoDe" />
-                <someValuesFrom rdf:resource="http://example.org/food#Alergeno" />
+                <onProperty rdf:resource="http://example.org/food#eDerivadoDe"/>
+                <someValuesFrom rdf:resource="http://example.org/food#Alergeno"/>
             </Restriction>
         </equivalentClass>
-        <rdfs:subClassOf rdf:resource="http://example.org/food#Alergeno" />
+        <rdfs:subClassOf rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Alérgeno por Derivação</rdfs:label>
     </Class>
+    
 
 
     <!-- http://example.org/food#Alimento -->
@@ -64,14 +72,16 @@
     <Class rdf:about="http://example.org/food#Alimento">
         <rdfs:label>Alimento</rdfs:label>
     </Class>
+    
 
 
     <!-- http://example.org/food#Bebida -->
 
     <Class rdf:about="http://example.org/food#Bebida">
-        <rdfs:subClassOf rdf:resource="http://example.org/food#Alimento" />
+        <rdfs:subClassOf rdf:resource="http://example.org/food#Alimento"/>
         <rdfs:label>Bebida</rdfs:label>
     </Class>
+    
 
 
     <!-- 
@@ -82,125 +92,194 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
 
     <!-- http://example.org/food#Amendoa -->
 
     <NamedIndividual rdf:about="http://example.org/food#Amendoa">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Amêndoa</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Amendoim -->
 
     <NamedIndividual rdf:about="http://example.org/food#Amendoim">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Amendoim</rdfs:label>
     </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Aveia -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Aveia">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Aveia</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Avelã -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Avelã">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Avelã</rdfs:label>
+    </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Castanha -->
 
     <NamedIndividual rdf:about="http://example.org/food#Castanha">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Castanha</rdfs:label>
     </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Castanha-de-caju -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Castanha-de-caju">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Castanha-de-caju</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Castanha-do-brasil -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Castanha-do-brasil">
+        <sameAs rdf:resource="http://example.org/food#Castanha-do-pará"/>
+        <rdfs:label>Castanha-do-brasil</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Castanha-do-pará -->
+
+    <rdf:Description rdf:about="http://example.org/food#Castanha-do-pará"/>
+    
+
+
+    <!-- http://example.org/food#Castanha-do-pará -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Castanha-do-pará">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Castanha-do-pará</rdfs:label>
+    </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Centeio -->
 
     <NamedIndividual rdf:about="http://example.org/food#Centeio">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Centeio</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Cevada -->
 
     <NamedIndividual rdf:about="http://example.org/food#Cevada">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Cevada</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Leite -->
 
     <NamedIndividual rdf:about="http://example.org/food#Leite">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Leite</rdfs:label>
     </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Látex_natural -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Látex_natural">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Látex natural</rdfs:label>
+    </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Macadamia -->
 
     <NamedIndividual rdf:about="http://example.org/food#Macadamia">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Macadâmia</rdfs:label>
     </NamedIndividual>
-
-
-    <!-- http://example.org/food#Manteiga -->
-
-    <NamedIndividual rdf:about="http://example.org/food#Manteiga">
-        <food:eDerivadoDe rdf:resource="http://example.org/food#Leite" />
-        <rdfs:label>Manteiga</rdfs:label>
-    </NamedIndividual>
-
-
-    <!-- http://example.org/food#MolhoSoja -->
-
-    <NamedIndividual rdf:about="http://example.org/food#MolhoSoja">
-        <food:eDerivadoDe rdf:resource="http://example.org/food#Soja" />
-        <rdfs:label>Molho de Soja</rdfs:label>
-    </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Nozes -->
 
     <NamedIndividual rdf:about="http://example.org/food#Nozes">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Nozes</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Ovo -->
 
     <NamedIndividual rdf:about="http://example.org/food#Ovo">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Ovo</rdfs:label>
     </NamedIndividual>
+    
+
+
+    <!-- http://example.org/food#Pecã -->
+
+    <NamedIndividual rdf:about="http://example.org/food#Pecã">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Pecã</rdfs:label>
+    </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Peixe -->
 
     <NamedIndividual rdf:about="http://example.org/food#Peixe">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Peixe</rdfs:label>
     </NamedIndividual>
+    
 
 
-    <!-- http://example.org/food#Queijo -->
+    <!-- http://example.org/food#Pistache -->
 
-    <NamedIndividual rdf:about="http://example.org/food#Queijo">
-        <rdfs:label>Queijo</rdfs:label>
+    <NamedIndividual rdf:about="http://example.org/food#Pistache">
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
+        <rdfs:label>Pistache</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Soja -->
 
     <NamedIndividual rdf:about="http://example.org/food#Soja">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Soja</rdfs:label>
     </NamedIndividual>
+    
 
 
     <!-- http://example.org/food#Trigo -->
 
     <NamedIndividual rdf:about="http://example.org/food#Trigo">
-        <rdf:type rdf:resource="http://example.org/food#Alergeno" />
+        <rdf:type rdf:resource="http://example.org/food#Alergeno"/>
         <rdfs:label>Trigo</rdfs:label>
     </NamedIndividual>
 </rdf:RDF>
+
 
 
 <!-- Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi -->
