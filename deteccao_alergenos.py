@@ -76,18 +76,19 @@ def detect_allergens(ingredients, allergens_set, algorithm):
                           if any(is_allergen_present(ingredient, allergen, algorithm) for allergen in allergens_set)]
     return detected_allergens
 
+def clean_text(text):
+    cleaned = unidecode(text.lower().strip())
+    cleaned = re.sub(r'[^a-zA-Z\s,]', '', cleaned)
+    cleaned = re.sub(r',+', ',', cleaned)
+    cleaned = re.sub(r' +', ' ', cleaned)
+    return cleaned
+
 
 def preprocess_data(df):
     df.dropna(subset=['ingredients_text_pt'], inplace=True)
-    df['ingredients_text_pt'] = (df['ingredients_text_pt'].apply(unidecode)
-                                 .str.lower()
-                                 .str.strip()
-                                 .replace({
-                                     '[^a-zA-Z\\s,]': '',
-                                     ',+': ',',
-                                     ' +': ' '
-                                 }, regex=True))
+    df['ingredients_text_pt'] = df['ingredients_text_pt'].apply(clean_text)
     return df
+
 
 
 def load_allergens_from_ontology(ontology_path, query_path="query_alergenos.sparql"):
@@ -96,7 +97,7 @@ def load_allergens_from_ontology(ontology_path, query_path="query_alergenos.spar
     with open(query_path, "r") as file:
         query = file.read()
     results = list(default_world.sparql(query))
-    allergens = set(unidecode(label.lower()) for [label] in results)
+    allergens = set(clean_text(label) for [label] in results)
     return allergens
 
 
