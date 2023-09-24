@@ -106,9 +106,9 @@ def load_allergens_from_ontology(query_path):
 
 def create_allergen_in_ontology(ontology, ontology_path, derived_name, allergen_base):
     allergen_base_instance = ontology.search_one(label=allergen_base)
-    AlergenoPorDerivacao = ontology.search_one(label="Alérgeno por Derivação")
+    Alimento = ontology.search_one(label="Alimento")
 
-    new_allergen = AlergenoPorDerivacao(derived_name.title().replace(" ", ""))
+    new_allergen = Alimento(derived_name.title().replace(" ", ""))
     new_allergen.label = [derived_name.title()]
     new_allergen.eDerivadoDe.append(allergen_base_instance)
 
