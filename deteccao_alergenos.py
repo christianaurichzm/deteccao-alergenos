@@ -149,13 +149,19 @@ def main():
                 create_allergen_in_ontology(ontology, ONTOLOGY_PATH, derivated_allergen, base_allergen)
                 added_derived_allergens.add(derivated_allergen)
 
+    df_amostra = load_data('amostra.csv')
+
+    df_amostra = preprocess_data(df_amostra)
+
+    extracted_ingredients_amostra = df_amostra['ingredients_text_pt'].progress_apply(extract_ingredients)
+
     for algorithm in Algorithms:
-        detected_allergens = extracted_ingredients.progress_apply(
+        detected_allergens = extracted_ingredients_amostra.progress_apply(
             lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm)
         )
-        df[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
+        df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
 
-    return df
+    return df_amostra
 
 
 if __name__ == '__main__':
