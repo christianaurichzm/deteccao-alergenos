@@ -1,15 +1,18 @@
 import re
 from enum import Enum
 
+import cachetools
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from IPython.core.display_functions import display
 from owlready2 import get_ontology, sync_reasoner, default_world
+from sklearn.metrics import ConfusionMatrixDisplay
 from thefuzz import fuzz
 from torch.nn.functional import cosine_similarity
+from tqdm import tqdm
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
-from tqdm import tqdm
-import cachetools
 
 cache = cachetools.LFUCache(maxsize=1000)
 
@@ -23,10 +26,6 @@ class Algorithms(Enum):
 tokenizerBert = BertTokenizer.from_pretrained(
     "neuralmind/bert-large-portuguese-cased")
 modelBert = BertModel.from_pretrained("neuralmind/bert-large-portuguese-cased")
-
-
-def load_data(file_path):
-    return pd.read_csv(file_path, sep="\t", low_memory=False, usecols=["product_name_pt", "ingredients_text_pt"])
 
 
 def extract_ingredients(text):
@@ -59,6 +58,51 @@ def bert_similarity(ingredient, allergen):
     allergen_embedding = sentences_to_embeddings_bert(allergen)
 
     return cosine_similarity(ingredient_embedding, allergen_embedding)
+
+
+def calculate_confusion_matrix(predicted_list, true_list, all_ingredients_list):
+    TP = sum([1 for item in predicted_list if item in true_list])
+    FP = sum([1 for item in predicted_list if item not in true_list])
+    FN = sum([1 for item in true_list if item not in predicted_list])
+    non_allergens = [item for item in all_ingredients_list if item not in true_list]
+    TN = sum([1 for item in non_allergens if item not in predicted_list])
+    return TP, FP, TN, FN
+
+
+def plot_confusion_matrix(matrix, algorithm):
+    disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    disp.plot(cmap='Blues', values_format='.2f')
+
+    plt.title(f'Matriz de confusão para o algoritmo: {algorithm}')
+    plt.tight_layout()
+    plt.show()
+
+
+def evaluate_algorithm(df, algorithm):
+    predicted_list = df[f'alergenos_{algorithm}'].tolist()
+    true_list = df['gabarito'].tolist()
+    all_ingredients_list = df['ingredients_text_pt'].apply(extract_ingredients).tolist()
+
+    all_TPs = []
+    all_FPs = []
+    all_TNs = []
+    all_FNs = []
+
+    for predicted, true, all_ingredients in zip(predicted_list, true_list, all_ingredients_list):
+        TP, FP, TN, FN = calculate_confusion_matrix(predicted, true, all_ingredients)
+        all_TPs.append(TP)
+        all_FPs.append(FP)
+        all_TNs.append(TN)
+        all_FNs.append(FN)
+
+    avg_TP = np.mean(all_TPs)
+    avg_FP = np.mean(all_FPs)
+    avg_TN = np.mean(all_TNs)
+    avg_FN = np.mean(all_FNs)
+
+    confusion_mat = np.array([[avg_TP, avg_FN], [avg_FP, avg_TN]])
+
+    plot_confusion_matrix(confusion_mat, algorithm)
 
 
 def is_allergen_present(ingredient, allergen, algorithm):
@@ -117,7 +161,8 @@ def create_allergen_in_ontology(ontology, ontology_path, derived_name, allergen_
 
 def main():
     tqdm.pandas()
-    df = load_data('openfoodfacts_export.csv')
+    df = pd.read_csv('openfoodfacts_export.csv', sep="\t", low_memory=False,
+                     usecols=["product_name_pt", "ingredients_text_pt"])
     df = preprocess_data(df)
 
     ONTOLOGY_PATH = "ontologia.owl"
@@ -149,7 +194,8 @@ def main():
                 create_allergen_in_ontology(ontology, ONTOLOGY_PATH, derivated_allergen, base_allergen)
                 added_derived_allergens.add(derivated_allergen)
 
-    df_amostra = load_data('amostra.csv')
+    df_amostra = pd.read_csv('conjunto_teste.csv', sep="\t", low_memory=False,
+                             usecols=["code", "product_name_pt", "ingredients_text_pt", "gabarito"])
 
     df_amostra = preprocess_data(df_amostra)
 
@@ -160,6 +206,7 @@ def main():
             lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm)
         )
         df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
+        evaluate_algorithm(df_amostra, algorithm.value)
 
     return df_amostra
 
