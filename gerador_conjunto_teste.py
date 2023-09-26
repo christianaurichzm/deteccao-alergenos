@@ -7,8 +7,6 @@ df = pd.read_csv(
     usecols=["code", "product_name_pt", "ingredients_text_pt"]
 )
 
-df.dropna(subset=['ingredients_text_pt'], inplace=True)
-
 GRUPOS = {
     "facil": [
         {"code": "7894904219650", "gabarito": ['proteína de soja', 'trigo']},
@@ -64,15 +62,20 @@ GRUPOS = {
     ]
 }
 
+all_codes = [item['code'] for group in GRUPOS.values() for item in group]
+
+df_treinamento = df[~df['code'].isin(all_codes)]
+
 gabaritos = [
     {'code': item['code'], 'gabarito': str(item['gabarito']), 'Grupo': grupo}
     for grupo, items in GRUPOS.items()
     for item in items
 ]
 
-df = df.merge(pd.DataFrame(gabaritos), on='code', how='inner')
+df_teste = df.merge(pd.DataFrame(gabaritos), on='code', how='inner')
 
-df['Grupo'] = pd.Categorical(df['Grupo'], ["facil", "medio", "dificil"])
-df = df.sort_values('Grupo')
+df_teste['Grupo'] = pd.Categorical(df_teste['Grupo'], ["facil", "medio", "dificil"])
+df_teste = df_teste.sort_values('Grupo')
 
-df.to_csv("amostra.csv", sep='\t', index=False)
+df_treinamento.to_csv("openfoodfacts_export.csv", sep='\t', index=False)
+df_teste.to_csv("conjunto_teste.csv", sep='\t', index=False)
