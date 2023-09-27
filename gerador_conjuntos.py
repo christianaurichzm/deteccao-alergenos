@@ -63,19 +63,23 @@ GRUPOS = {
 }
 
 all_codes = [item['code'] for group in GRUPOS.values() for item in group]
+present_codes = df['code'].unique().tolist()
+testing_codes = [code for code in all_codes if code in present_codes]
 
-df_treinamento = df[~df['code'].isin(all_codes)]
+if testing_codes:
+    df_treinamento = df[~df['code'].isin(testing_codes)]
 
-gabaritos = [
-    {'code': item['code'], 'gabarito': str(item['gabarito']), 'Grupo': grupo}
-    for grupo, items in GRUPOS.items()
-    for item in items
-]
+    gabaritos = [
+        {'code': item['code'], 'gabarito': str(item['gabarito']), 'Grupo': grupo}
+        for grupo, items in GRUPOS.items()
+        for item in items
+    ]
 
-df_teste = df.merge(pd.DataFrame(gabaritos), on='code', how='inner')
+    df_teste = df.merge(pd.DataFrame(gabaritos), on='code', how='inner')
 
-df_teste['Grupo'] = pd.Categorical(df_teste['Grupo'], ["facil", "medio", "dificil"])
-df_teste = df_teste.sort_values('Grupo')
+    df_teste['Grupo'] = pd.Categorical(df_teste['Grupo'], ["facil", "medio", "dificil"])
+    df_teste = df_teste.sort_values('Grupo')
 
-df_treinamento.to_csv("openfoodfacts_export.csv", sep='\t', index=False)
-df_teste.to_csv("conjunto_teste.csv", sep='\t', index=False)
+    df_treinamento.to_csv("openfoodfacts_export.csv", sep='\t', index=False)
+    df_teste.to_csv("conjunto_teste.csv", sep='\t', index=False)
+
