@@ -1,5 +1,6 @@
 import re
 from enum import Enum
+import ast
 
 import cachetools
 import matplotlib.pyplot as plt
@@ -201,11 +202,15 @@ def main():
 
     extracted_ingredients_amostra = df_amostra['ingredients_text_pt'].progress_apply(extract_ingredients)
 
+    df_amostra['gabarito'] = df_amostra['gabarito'].apply(ast.literal_eval)
+    df_amostra['gabarito'] = df_amostra['gabarito'].apply(lambda x: [clean_text(i) for i in x])
+
     for algorithm in Algorithms:
         detected_allergens = extracted_ingredients_amostra.progress_apply(
             lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm)
         )
         df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
+
         evaluate_algorithm(df_amostra, algorithm.value)
 
     return df_amostra
