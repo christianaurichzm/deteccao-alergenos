@@ -84,6 +84,22 @@ def plot_confusion_matrix(matrix, algorithm):
     plt.tight_layout()
     plt.show()
 
+def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
+    metrics = ['Acurácia', 'Precisão', 'Revocação', 'Score F1']
+    values = [avg_accuracy, avg_precisions, avg_recalls, avg_f1]
+
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(metrics, values, color=['#003f5c', '#7a5195', '#ef5675', '#ffa600'])
+
+    plt.ylabel('Pontuação')
+    plt.title(f'Métricas para o algoritmo: {algorithm}')
+    plt.ylim(0, 1)
+
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval, 2), ha='center', va='bottom')
+
+    plt.show()
 
 
 def evaluate_algorithm(df, algorithm):
@@ -123,10 +139,7 @@ def evaluate_algorithm(df, algorithm):
     confusion_mat = np.array([[avg_TP, avg_FN], [avg_FP, avg_TN]])
 
     plot_confusion_matrix(confusion_mat, algorithm)
-    print(f"Acurácia média para o algoritmo {algorithm}: {avg_accuracy:.2f}")
-    print(f"Precisão média para o algoritmo {algorithm}: {avg_precisions:.2f}")
-    print(f"Sensibilidade média para o algoritmo {algorithm}: {avg_recalls:.2f}")
-    print(f"F1-score médio para o algoritmo {algorithm}: {avg_f1:.2f}")
+    plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm)
 
 
 def is_allergen_present(ingredient, allergen, algorithm):
