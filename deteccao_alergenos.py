@@ -86,7 +86,7 @@ def calculate_metrics(predicted_list, true_list, all_ingredients_list):
 
 def plot_confusion_matrix(matrix, algorithm):
     disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
-    disp.plot(cmap='Blues', values_format='.2f')
+    disp.plot(cmap='Purples', values_format='.2f')
 
     plt.title(f'Matriz de confusão para o algoritmo: {algorithm}')
     plt.tight_layout()
