@@ -61,13 +61,19 @@ def bert_similarity(ingredient, allergen):
     return cosine_similarity(ingredient_embedding, allergen_embedding)
 
 
-def calculate_confusion_matrix(predicted_list, true_list, all_ingredients_list):
+def calculate_metrics(predicted_list, true_list, all_ingredients_list):
     TP = sum([1 for item in predicted_list if item in true_list])
     FP = sum([1 for item in predicted_list if item not in true_list])
     FN = sum([1 for item in true_list if item not in predicted_list])
     non_allergens = [item for item in all_ingredients_list if item not in true_list]
     TN = sum([1 for item in non_allergens if item not in predicted_list])
-    return TP, FP, TN, FN
+
+    accuracy = (TP + TN) / (TP + TN + FP + FN)
+    precision = TP / (TP + FP) if TP + FP != 0 else 0
+    recall = TP / (TP + FN) if TP + FN != 0 else 0
+    f1 = 2 * (precision * recall) / (precision + recall) if precision + recall != 0 else 0
+
+    return TP, FP, TN, FN, accuracy, precision, recall, f1
 
 
 def plot_confusion_matrix(matrix, algorithm):
@@ -79,6 +85,7 @@ def plot_confusion_matrix(matrix, algorithm):
     plt.show()
 
 
+
 def evaluate_algorithm(df, algorithm):
     predicted_list = df[f'alergenos_{algorithm}'].tolist()
     true_list = df['gabarito'].tolist()
@@ -88,22 +95,38 @@ def evaluate_algorithm(df, algorithm):
     all_FPs = []
     all_TNs = []
     all_FNs = []
+    all_accuracies = []
+    all_precisions = []
+    all_recalls = []
+    all_f1s = []
 
     for predicted, true, all_ingredients in zip(predicted_list, true_list, all_ingredients_list):
-        TP, FP, TN, FN = calculate_confusion_matrix(predicted, true, all_ingredients)
+        TP, FP, TN, FN, accuracy, precision, recall, f1 = calculate_metrics(predicted, true, all_ingredients)
         all_TPs.append(TP)
         all_FPs.append(FP)
         all_TNs.append(TN)
         all_FNs.append(FN)
+        all_accuracies.append(accuracy)
+        all_precisions.append(precision)
+        all_recalls.append(recall)
+        all_f1s.append(f1)
 
     avg_TP = np.mean(all_TPs)
     avg_FP = np.mean(all_FPs)
     avg_TN = np.mean(all_TNs)
     avg_FN = np.mean(all_FNs)
+    avg_accuracy = np.mean(all_accuracies)
+    avg_precisions = np.mean(all_precisions)
+    avg_recalls = np.mean(all_recalls)
+    avg_f1 = np.mean(all_f1s)
 
     confusion_mat = np.array([[avg_TP, avg_FN], [avg_FP, avg_TN]])
 
     plot_confusion_matrix(confusion_mat, algorithm)
+    print(f"Acurácia média para o algoritmo {algorithm}: {avg_accuracy:.2f}")
+    print(f"Precisão média para o algoritmo {algorithm}: {avg_precisions:.2f}")
+    print(f"Sensibilidade média para o algoritmo {algorithm}: {avg_recalls:.2f}")
+    print(f"F1-score médio para o algoritmo {algorithm}: {avg_f1:.2f}")
 
 
 def is_allergen_present(ingredient, allergen, algorithm):
