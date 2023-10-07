@@ -262,8 +262,8 @@ def main():
         df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
         best_confusion_mat, best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1 = evaluate_algorithm(
             df_amostra, algorithm.value)
-        plot_confusion_matrix(best_confusion_mat, algorithm)
-        plot_metrics(best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1, algorithm)
+        plot_confusion_matrix(best_confusion_mat, algorithm.value)
+        plot_metrics(best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1, algorithm.value)
 
     return df_amostra
 
