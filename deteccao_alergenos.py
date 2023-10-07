@@ -43,7 +43,7 @@ def jaccard_similarity(ingredient, allergen):
     allergen_set = set(allergen)
     intersection = ingredient_set.intersection(allergen_set)
     union = ingredient_set.union(allergen_set)
-    return len(intersection) / len(union)
+    return (len(intersection) / len(union)) * 100
 
 
 def sentences_to_embeddings_bert(sentences):
@@ -66,7 +66,7 @@ def bert_similarity(ingredient, allergen):
     ingredient_embedding = sentences_to_embeddings_bert(ingredient)
     allergen_embedding = sentences_to_embeddings_bert(allergen)
 
-    return cosine_similarity(ingredient_embedding, allergen_embedding)
+    return cosine_similarity(ingredient_embedding, allergen_embedding) * 100
 
 
 def calculate_metrics(predicted_list, true_list, all_ingredients_list):
@@ -157,9 +157,9 @@ def is_allergen_present(ingredient, allergen, algorithm, threshold):
         case Algorithms.LEVENSHTEIN:
             return levenshtein_distance(ingredient, allergen) > threshold
         case Algorithms.BERT:
-            return bert_similarity(ingredient, allergen) > threshold / 100
+            return bert_similarity(ingredient, allergen) > threshold
         case Algorithms.JACCARD:
-            return jaccard_similarity(ingredient, allergen) > threshold / 100
+            return jaccard_similarity(ingredient, allergen) > threshold
 
 
 def detect_allergens(ingredients, cleaned_allergens_set, allergen_mapping, algorithm, threshold):
