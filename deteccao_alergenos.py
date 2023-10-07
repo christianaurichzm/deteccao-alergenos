@@ -24,9 +24,9 @@ class Algorithms(Enum):
     BERT = "bert"
 
 
-tokenizerBert = BertTokenizer.from_pretrained(
-    "neuralmind/bert-large-portuguese-cased")
-modelBert = BertModel.from_pretrained("neuralmind/bert-large-portuguese-cased")
+bert_arch = "neuralmind/bert-large-portuguese-cased"
+tokenizer_bert = BertTokenizer.from_pretrained(bert_arch)
+model_bert = BertModel.from_pretrained(bert_arch)
 
 
 def extract_ingredients(text):
@@ -44,9 +44,9 @@ def sentences_to_embeddings_bert(sentences):
     if hash_key in cache:
         return cache[hash_key]
 
-    inputs = tokenizerBert(sentences, return_tensors="pt",
-                           padding=True, truncation=True, max_length=128)
-    outputs = modelBert(**inputs)
+    inputs = tokenizer_bert(sentences, return_tensors="pt",
+                            padding=True, truncation=True, max_length=128)
+    outputs = model_bert(**inputs)
     embedding = outputs.last_hidden_state.mean(dim=1)
 
     cache[hash_key] = embedding
