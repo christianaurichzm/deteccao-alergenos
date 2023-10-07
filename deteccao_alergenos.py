@@ -85,10 +85,17 @@ def calculate_metrics(predicted_list, true_list, all_ingredients_list):
 
 
 def plot_confusion_matrix(matrix, algorithm):
-    disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    class_labels = ['Alérgeno', 'Não alergeno']
+    disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=class_labels)
     disp.plot(cmap='Purples', values_format='.2f')
 
+    ax = plt.gca()
+    ax.set_yticklabels(class_labels, rotation=90)
+
+    plt.xlabel('Rótulo predito')
+    plt.ylabel('Rótulo verdadeiro')
     plt.title(f'Matriz de confusão para o algoritmo: {algorithm}')
+    
     plt.tight_layout()
     plt.show()
 
