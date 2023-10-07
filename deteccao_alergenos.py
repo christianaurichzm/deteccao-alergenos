@@ -21,6 +21,7 @@ cache = cachetools.LFUCache(maxsize=1000)
 class Algorithms(Enum):
     MATCH = "match"
     LEVENSHTEIN = "levenshtein"
+    JACCARD = "jaccard"
     BERT = "bert"
 
 
@@ -36,6 +37,13 @@ def extract_ingredients(text):
 
 def levenshtein_distance(ingredient, allergen):
     return fuzz.ratio(ingredient, allergen)
+
+def jaccard_similarity(ingredient, allergen):
+    ingredient_set = set(ingredient)
+    allergen_set = set(allergen)
+    intersection = ingredient_set.intersection(allergen_set)
+    union = ingredient_set.union(allergen_set)
+    return len(intersection) / len(union)
 
 
 def sentences_to_embeddings_bert(sentences):
@@ -150,6 +158,8 @@ def is_allergen_present(ingredient, allergen, algorithm, threshold):
             return levenshtein_distance(ingredient, allergen) > threshold
         case Algorithms.BERT:
             return bert_similarity(ingredient, allergen) > threshold / 100
+        case Algorithms.JACCARD:
+            return jaccard_similarity(ingredient, allergen) > threshold / 100
 
 
 def detect_allergens(ingredients, cleaned_allergens_set, allergen_mapping, algorithm, threshold):
