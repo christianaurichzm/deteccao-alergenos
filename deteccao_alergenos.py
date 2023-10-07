@@ -90,12 +90,12 @@ def plot_confusion_matrix(matrix, algorithm):
     disp.plot(cmap='Purples', values_format='.2f')
 
     ax = plt.gca()
-    ax.set_yticklabels(class_labels, rotation=90)
+    ax.set_yticklabels(class_labels, rotation=90, va='center')
 
     plt.xlabel('Rótulo predito')
     plt.ylabel('Rótulo verdadeiro')
     plt.title(f'Matriz de confusão para o algoritmo: {algorithm}')
-    
+
     plt.tight_layout()
     plt.show()
 
