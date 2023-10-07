@@ -84,6 +84,7 @@ def plot_confusion_matrix(matrix, algorithm):
     plt.tight_layout()
     plt.show()
 
+
 def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
     metrics = ['Acurácia', 'Precisão', 'Revocação', 'Score F1']
     values = [avg_accuracy, avg_precisions, avg_recalls, avg_f1]
@@ -97,7 +98,7 @@ def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
 
     for bar in bars:
         yval = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval, 2), ha='center', va='bottom')
+        plt.text(bar.get_x() + bar.get_width() / 2.0, yval, round(yval, 2), ha='center', va='bottom')
 
     plt.show()
 
@@ -138,25 +139,24 @@ def evaluate_algorithm(df, algorithm):
 
     confusion_mat = np.array([[avg_TP, avg_FN], [avg_FP, avg_TN]])
 
-    plot_confusion_matrix(confusion_mat, algorithm)
-    plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm)
+    return confusion_mat, avg_accuracy, avg_precisions, avg_recalls, avg_f1
 
 
-def is_allergen_present(ingredient, allergen, algorithm):
+def is_allergen_present(ingredient, allergen, algorithm, threshold):
     match algorithm:
         case Algorithms.MATCH:
             return allergen in ingredient
         case Algorithms.LEVENSHTEIN:
-            return levenshtein_distance(ingredient, allergen) > 80
+            return levenshtein_distance(ingredient, allergen) > threshold
         case Algorithms.BERT:
-            return bert_similarity(ingredient, allergen) > 0.92
+            return bert_similarity(ingredient, allergen) > threshold / 100
 
 
-def detect_allergens(ingredients, cleaned_allergens_set, allergen_mapping, algorithm):
+def detect_allergens(ingredients, cleaned_allergens_set, allergen_mapping, algorithm, threshold):
     detected_allergens = []
     for ingredient in ingredients:
         for cleaned_allergen in cleaned_allergens_set:
-            if is_allergen_present(ingredient, cleaned_allergen, algorithm):
+            if is_allergen_present(ingredient, cleaned_allergen, algorithm, threshold):
                 original_allergen = allergen_mapping.get(cleaned_allergen, cleaned_allergen)
                 detected_allergens.append((ingredient, original_allergen))
                 break
@@ -219,7 +219,7 @@ def main():
     extracted_ingredients = df['ingredients_text_pt'].progress_apply(extract_ingredients)
 
     detected_allergens_match = extracted_ingredients.progress_apply(
-        lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, Algorithms.MATCH)
+        lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, Algorithms.MATCH, 0)
     )
 
     added_derived_allergens = set()
@@ -242,12 +242,28 @@ def main():
     df_amostra['gabarito'] = df_amostra['gabarito'].apply(lambda x: [clean_text(i) for i in x])
 
     for algorithm in Algorithms:
+        best_threshold = 0
+        best_f1 = 0
+        for threshold in range(0, 101):
+            detected_allergens = extracted_ingredients_amostra.progress_apply(
+                lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm, threshold)
+            )
+            df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(
+                lambda x: [detected[0] for detected in x])
+            metrics = evaluate_algorithm(df_amostra, algorithm.value)
+            avg_f1 = metrics[-1]
+            if avg_f1 > best_f1:
+                best_f1 = avg_f1
+                best_threshold = threshold
+
         detected_allergens = extracted_ingredients_amostra.progress_apply(
-            lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm)
+            lambda x: detect_allergens(x, cleaned_allergens_set, allergen_mapping, algorithm, best_threshold)
         )
         df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(lambda x: [detected[0] for detected in x])
-
-        evaluate_algorithm(df_amostra, algorithm.value)
+        best_confusion_mat, best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1 = evaluate_algorithm(
+            df_amostra, algorithm.value)
+        plot_confusion_matrix(best_confusion_mat, algorithm)
+        plot_metrics(best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1, algorithm)
 
     return df_amostra
 
