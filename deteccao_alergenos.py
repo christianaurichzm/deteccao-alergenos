@@ -202,15 +202,13 @@ def load_allergens_from_ontology(query_path):
     return allergens
 
 
-def create_allergen_in_ontology(ontology, ontology_path, derived_name, allergen_base):
+def create_allergen_in_ontology(ontology, derived_name, allergen_base):
     allergen_base_instance = ontology.search_one(label=allergen_base)
     Alimento = ontology.search_one(label="Alimento")
 
     new_allergen = Alimento(derived_name.title().replace(" ", ""))
     new_allergen.label = [derived_name.title()]
     new_allergen.eDerivadoDe.append(allergen_base_instance)
-
-    ontology.save(ontology_path)
 
 
 def main():
@@ -245,8 +243,9 @@ def main():
         for derivated_allergen, base_allergen in allergen_pairs:
             if derivated_allergen != base_allergen and derivated_allergen not in added_derived_allergens and not ontology.search_one(
                     label=derivated_allergen.title()):
-                create_allergen_in_ontology(ontology, ONTOLOGY_PATH, derivated_allergen, base_allergen)
+                create_allergen_in_ontology(ontology, derivated_allergen, base_allergen)
                 added_derived_allergens.add(derivated_allergen)
+    ontology.save(ONTOLOGY_PATH)
 
     df_amostra = pd.read_csv('conjunto_teste.csv', sep="\t", low_memory=False,
                              usecols=["code", "product_name_pt", "ingredients_text_pt", "gabarito"])
