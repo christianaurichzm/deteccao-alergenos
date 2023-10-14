@@ -14,6 +14,7 @@ from torch.nn.functional import cosine_similarity
 from tqdm import tqdm
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
+import spacy
 
 cache = cachetools.LFUCache(maxsize=1000)
 
@@ -22,12 +23,14 @@ class Algorithms(Enum):
     MATCH = "match"
     LEVENSHTEIN = "levenshtein"
     JACCARD = "jaccard"
+    SPACY = "spacy"
     BERT = "bert"
 
 
 bert_arch = "neuralmind/bert-large-portuguese-cased"
 tokenizer_bert = BertTokenizer.from_pretrained(bert_arch)
 model_bert = BertModel.from_pretrained(bert_arch)
+model_spacy = spacy.load('pt_core_news_md')
 
 
 def extract_ingredients(text):
@@ -38,6 +41,7 @@ def extract_ingredients(text):
 def levenshtein_distance(ingredient, allergen):
     return fuzz.ratio(ingredient, allergen)
 
+
 def jaccard_similarity(ingredient, allergen):
     ingredient_set = set(ingredient)
     allergen_set = set(allergen)
@@ -46,25 +50,41 @@ def jaccard_similarity(ingredient, allergen):
     return (len(intersection) / len(union)) * 100
 
 
-def sentences_to_embeddings_bert(sentences):
-    hash_key = hash(sentences)
+def get_cached_transformation(sentence, transformation_func):
+    hash_key = hash(sentence)
 
     if hash_key in cache:
         return cache[hash_key]
 
+    transformed = transformation_func(sentence)
+
+    cache[hash_key] = transformed
+
+    return transformed
+
+
+def spacy_similarity(ingredient, allergen):
+    token1 = get_cached_transformation(ingredient, model_spacy)
+    token2 = get_cached_transformation(allergen, model_spacy)
+
+    if token1.has_vector and token2.has_vector:
+        similarity = token1.similarity(token2) * 100
+    else:
+        similarity = 0
+
+    return similarity
+
+
+def sentences_to_embeddings_bert(sentences):
     inputs = tokenizer_bert(sentences, return_tensors="pt",
                             padding=True, truncation=True, max_length=128)
     outputs = model_bert(**inputs)
-    embedding = outputs.last_hidden_state.mean(dim=1)
-
-    cache[hash_key] = embedding
-
-    return embedding
+    return outputs.last_hidden_state.mean(dim=1)
 
 
 def bert_similarity(ingredient, allergen):
-    ingredient_embedding = sentences_to_embeddings_bert(ingredient)
-    allergen_embedding = sentences_to_embeddings_bert(allergen)
+    ingredient_embedding = get_cached_transformation(ingredient, sentences_to_embeddings_bert)
+    allergen_embedding = get_cached_transformation(allergen, sentences_to_embeddings_bert)
 
     return cosine_similarity(ingredient_embedding, allergen_embedding) * 100
 
@@ -163,10 +183,12 @@ def is_allergen_present(ingredient, allergen, algorithm, threshold):
             return allergen in ingredient
         case Algorithms.LEVENSHTEIN:
             return levenshtein_distance(ingredient, allergen) > threshold
-        case Algorithms.BERT:
-            return bert_similarity(ingredient, allergen) > threshold
         case Algorithms.JACCARD:
             return jaccard_similarity(ingredient, allergen) > threshold
+        case Algorithms.SPACY:
+            return spacy_similarity(ingredient, allergen) > threshold
+        case Algorithms.BERT:
+            return bert_similarity(ingredient, allergen) > threshold
 
 
 def detect_allergens(ingredients, cleaned_allergens_set, allergen_mapping, algorithm, threshold):
@@ -280,6 +302,7 @@ def main():
             df_amostra, algorithm.value)
         plot_confusion_matrix(best_confusion_mat, algorithm.value)
         plot_metrics(best_avg_accuracy, best_avg_precisions, best_avg_recalls, best_avg_f1, algorithm.value)
+        cache.clear()
 
     return df_amostra
 
