@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 import ast
+import os
 
 import cachetools
 import matplotlib.pyplot as plt
@@ -10,11 +11,13 @@ from IPython.core.display_functions import display
 from owlready2 import get_ontology, sync_reasoner, default_world
 from sklearn.metrics import ConfusionMatrixDisplay
 from thefuzz import fuzz
-from torch.nn.functional import cosine_similarity
+from torch.nn.functional import cosine_similarity as cosine_similarity_torch
 from tqdm import tqdm
+from sklearn.metrics.pairwise import cosine_similarity as cossine_similarity_sklearn
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
 import spacy
+from gensim.models.fasttext import load_facebook_vectors
 
 cache = cachetools.LFUCache(maxsize=1000)
 
@@ -24,13 +27,28 @@ class Algorithms(Enum):
     LEVENSHTEIN = "levenshtein"
     JACCARD = "jaccard"
     SPACY = "spacy"
+    FASTTEXT = "fasttext"
     BERT = "bert"
+
+
+def load_fasttext(path):
+    try:
+        if os.path.exists(path):
+            print("Carregando o modelo FastText...")
+            return load_facebook_vectors(path)
+        else:
+            print("O arquivo do modelo FastText não foi encontrado.")
+            return None
+    except Exception as e:
+        print(f"Erro ao carregar o modelo FastText: {e}")
+        return None
 
 
 bert_arch = "neuralmind/bert-large-portuguese-cased"
 tokenizer_bert = BertTokenizer.from_pretrained(bert_arch)
 model_bert = BertModel.from_pretrained(bert_arch)
 model_spacy = spacy.load('pt_core_news_md')
+model_fasttext = load_fasttext('cc.pt.300.bin')
 
 
 def extract_ingredients(text):
@@ -75,6 +93,25 @@ def spacy_similarity(ingredient, allergen):
     return similarity
 
 
+def get_sentence_vector(sentence):
+    words = sentence.split()
+    vectors = [model_fasttext[word] for word in words if word in model_fasttext]
+
+    if vectors:
+        return np.mean(vectors, axis=0)
+    else:
+        vector_dim = model_fasttext.vector_size
+        return np.zeros(vector_dim)
+
+
+def fasttext_similarity(ingredient, allergen):
+    token1 = get_cached_transformation(ingredient, get_sentence_vector)
+    token2 = get_cached_transformation(allergen, get_sentence_vector)
+    token1 = np.array(token1).reshape(1, -1)
+    token2 = np.array(token2).reshape(1, -1)
+    return cossine_similarity_sklearn(token1, token2) * 100
+
+
 def sentences_to_embeddings_bert(sentences):
     inputs = tokenizer_bert(sentences, return_tensors="pt",
                             padding=True, truncation=True, max_length=128)
@@ -86,7 +123,7 @@ def bert_similarity(ingredient, allergen):
     ingredient_embedding = get_cached_transformation(ingredient, sentences_to_embeddings_bert)
     allergen_embedding = get_cached_transformation(allergen, sentences_to_embeddings_bert)
 
-    return cosine_similarity(ingredient_embedding, allergen_embedding) * 100
+    return cosine_similarity_torch(ingredient_embedding, allergen_embedding) * 100
 
 
 def calculate_metrics(predicted_list, true_list, all_ingredients_list):
@@ -187,6 +224,8 @@ def is_allergen_present(ingredient, allergen, algorithm, threshold):
             return jaccard_similarity(ingredient, allergen) > threshold
         case Algorithms.SPACY:
             return spacy_similarity(ingredient, allergen) > threshold
+        case Algorithms.FASTTEXT:
+            return fasttext_similarity(ingredient, allergen) > threshold
         case Algorithms.BERT:
             return bert_similarity(ingredient, allergen) > threshold
 
@@ -280,6 +319,9 @@ def main():
     df_amostra['gabarito'] = df_amostra['gabarito'].apply(lambda x: [clean_text(i) for i in x])
 
     for algorithm in Algorithms:
+        if algorithm == Algorithms.FASTTEXT and model_fasttext is None:
+            continue
+
         best_threshold = 0
         best_f1 = 0
         for threshold in range(0, 101):
