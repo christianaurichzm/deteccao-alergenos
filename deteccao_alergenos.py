@@ -135,6 +135,27 @@ def calculate_metrics(predicted, true_list, all_ingredients):
 
     return PerformanceIndicators(TP, FP, TN, FN, accuracy, precision, recall, f1)
 
+def evaluate_algorithm(df, algorithm):
+    indicators_list = []
+
+    for row in df.itertuples():
+        predicted = getattr(row, f'alergenos_{algorithm}')
+        true_list = row.gabarito
+        all_ingredients = extract_ingredients(row.ingredients_text_pt)
+
+        indicators = calculate_metrics(predicted, true_list, all_ingredients)
+        indicators_list.append(indicators)
+
+    indicators_array = np.array(indicators_list)
+
+    avg_indicators_values = np.mean(indicators_array, axis=0)
+    avg_indicators = PerformanceIndicators(*avg_indicators_values)
+
+    confusion_mat = np.array([[avg_indicators.TP, avg_indicators.FN], [avg_indicators.FP, avg_indicators.TN]])
+
+    return EvaluationResult(confusion_mat, avg_indicators.accuracy, avg_indicators.precision, avg_indicators.recall,
+                            avg_indicators.f1)
+
 
 def plot_confusion_matrix(matrix, algorithm):
     class_labels = ['Alérgeno', 'Não alergeno']
@@ -168,27 +189,6 @@ def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
         plt.text(bar.get_x() + bar.get_width() / 2.0, yval, round(yval, 2), ha='center', va='bottom')
 
     plt.show()
-
-
-def evaluate_algorithm(df, algorithm):
-    indicators_list = []
-
-    for row in df.itertuples():
-        predicted = getattr(row, f'alergenos_{algorithm}')
-        true_list = row.gabarito
-        all_ingredients = extract_ingredients(row.ingredients_text_pt)
-
-        indicators = calculate_metrics(predicted, true_list, all_ingredients)
-        indicators_list.append(indicators)
-
-    indicators_array = np.array(indicators_list)
-
-    avg_indicators_values = np.mean(indicators_array, axis=0)
-    avg_indicators = PerformanceIndicators(*avg_indicators_values)
-
-    confusion_mat = np.array([[avg_indicators.TP, avg_indicators.FN], [avg_indicators.FP, avg_indicators.TN]])
-
-    return EvaluationResult(confusion_mat, avg_indicators.accuracy, avg_indicators.precision, avg_indicators.recall, avg_indicators.f1)
 
 
 def is_allergen_present(ingredient, allergen, algorithm, threshold):
@@ -292,8 +292,7 @@ def main():
 
     extracted_ingredients_amostra = df_amostra['ingredients_text_pt'].progress_apply(extract_ingredients)
 
-    df_amostra['gabarito'] = df_amostra['gabarito'].apply(ast.literal_eval)
-    df_amostra['gabarito'] = df_amostra['gabarito'].apply(lambda x: [clean_text(i) for i in x])
+    df_amostra['gabarito'] = df_amostra['gabarito'].apply(ast.literal_eval).apply(lambda x: [clean_text(i) for i in x])
 
     for algorithm in Algorithms:
         if algorithm == Algorithms.FASTTEXT and model_fasttext is None:
