@@ -1,7 +1,6 @@
 import re
 from enum import Enum
 import ast
-import os
 
 import cachetools
 import matplotlib.pyplot as plt
@@ -17,7 +16,7 @@ from sklearn.metrics.pairwise import cosine_similarity as cossine_similarity_skl
 from transformers import BertTokenizer, BertModel
 from unidecode import unidecode
 import spacy
-from gensim.models.fasttext import load_facebook_vectors
+import fasttext.util
 
 cache = cachetools.LFUCache(maxsize=1000)
 
@@ -31,24 +30,15 @@ class Algorithms(Enum):
     BERT = "bert"
 
 
-def load_fasttext(path):
-    try:
-        if os.path.exists(path):
-            print("Carregando o modelo FastText...")
-            return load_facebook_vectors(path)
-        else:
-            print("O arquivo do modelo FastText não foi encontrado.")
-            return None
-    except Exception as e:
-        print(f"Erro ao carregar o modelo FastText: {e}")
-        return None
-
-
-bert_arch = "neuralmind/bert-large-portuguese-cased"
-tokenizer_bert = BertTokenizer.from_pretrained(bert_arch)
-model_bert = BertModel.from_pretrained(bert_arch)
 model_spacy = spacy.load('pt_core_news_md')
-model_fasttext = load_fasttext('cc.pt.300.bin')
+
+FASTTEXT_LANG = "pt"
+fasttext.util.download_model(FASTTEXT_LANG, if_exists='ignore')
+model_fasttext = fasttext.load_model(f'cc.{FASTTEXT_LANG}.300.bin')
+
+BERT_ARCH = "neuralmind/bert-large-portuguese-cased"
+tokenizer_bert = BertTokenizer.from_pretrained(BERT_ARCH)
+model_bert = BertModel.from_pretrained(BERT_ARCH)
 
 
 def extract_ingredients(text):
@@ -93,20 +83,20 @@ def spacy_similarity(ingredient, allergen):
     return similarity
 
 
-def get_sentence_vector(sentence):
+def sentence_to_vector_fasttext(sentence):
     words = sentence.split()
-    vectors = [model_fasttext[word] for word in words if word in model_fasttext]
+    vectors = [model_fasttext.get_word_vector(word) for word in words]
 
     if vectors:
         return np.mean(vectors, axis=0)
     else:
-        vector_dim = model_fasttext.vector_size
+        vector_dim = model_fasttext.get_dimension()
         return np.zeros(vector_dim)
 
 
 def fasttext_similarity(ingredient, allergen):
-    token1 = get_cached_transformation(ingredient, get_sentence_vector)
-    token2 = get_cached_transformation(allergen, get_sentence_vector)
+    token1 = get_cached_transformation(ingredient, sentence_to_vector_fasttext)
+    token2 = get_cached_transformation(allergen, sentence_to_vector_fasttext)
     token1 = np.array(token1).reshape(1, -1)
     token2 = np.array(token2).reshape(1, -1)
     return cossine_similarity_sklearn(token1, token2) * 100
