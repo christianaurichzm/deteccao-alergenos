@@ -116,14 +116,14 @@ def bert_similarity(ingredient, allergen):
     return cosine_similarity_torch(ingredient_embedding, allergen_embedding) * 100
 
 
-def calculate_metrics(predicted_list, true_list, all_ingredients_list):
-    TP = sum([1 for item in predicted_list if item in true_list])
-    FP = sum([1 for item in predicted_list if item not in true_list])
-    FN = sum([1 for item in true_list if item not in predicted_list])
-    non_allergens = [item for item in all_ingredients_list if item not in true_list]
-    TN = sum([1 for item in non_allergens if item not in predicted_list])
+def calculate_metrics(predicted, true_list, all_ingredients):
+    TP = len(set(predicted) & set(true_list))
+    FP = len(set(predicted) - set(true_list))
+    FN = len(set(true_list) - set(predicted))
+    TN = len(set(all_ingredients) - set(true_list) - set(predicted))
 
-    accuracy = (TP + TN) / (TP + TN + FP + FN)
+    total = TP + FP + FN + TN
+    accuracy = (TP + TN) / total if total != 0 else 0
     precision = TP / (TP + FP) if TP + FP != 0 else 0
     recall = TP / (TP + FN) if TP + FN != 0 else 0
     f1 = 2 * (precision * recall) / (precision + recall) if precision + recall != 0 else 0
