@@ -1,4 +1,5 @@
 import re
+from collections import namedtuple
 from enum import Enum
 import ast
 
@@ -19,6 +20,10 @@ import spacy
 import fasttext.util
 
 cache = cachetools.LFUCache(maxsize=1000)
+
+metrics = ['accuracy', 'precision', 'recall', 'f1']
+PerformanceIndicators = namedtuple('PerformanceIndicators', ['TP', 'FP', 'TN', 'FN', *metrics])
+EvaluationResult = namedtuple('EvaluationResult', ['confusion_mat', *metrics])
 
 
 class Algorithms(Enum):
@@ -128,7 +133,7 @@ def calculate_metrics(predicted, true_list, all_ingredients):
     recall = TP / (TP + FN) if TP + FN != 0 else 0
     f1 = 2 * (precision * recall) / (precision + recall) if precision + recall != 0 else 0
 
-    return TP, FP, TN, FN, accuracy, precision, recall, f1
+    return PerformanceIndicators(TP, FP, TN, FN, accuracy, precision, recall, f1)
 
 
 def plot_confusion_matrix(matrix, algorithm):
@@ -166,42 +171,24 @@ def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
 
 
 def evaluate_algorithm(df, algorithm):
-    predicted_list = df[f'alergenos_{algorithm}'].tolist()
-    true_list = df['gabarito'].tolist()
-    all_ingredients_list = df['ingredients_text_pt'].apply(extract_ingredients).tolist()
+    indicators_list = []
 
-    all_TPs = []
-    all_FPs = []
-    all_TNs = []
-    all_FNs = []
-    all_accuracies = []
-    all_precisions = []
-    all_recalls = []
-    all_f1s = []
+    for row in df.itertuples():
+        predicted = getattr(row, f'alergenos_{algorithm}')
+        true_list = row.gabarito
+        all_ingredients = extract_ingredients(row.ingredients_text_pt)
 
-    for predicted, true, all_ingredients in zip(predicted_list, true_list, all_ingredients_list):
-        TP, FP, TN, FN, accuracy, precision, recall, f1 = calculate_metrics(predicted, true, all_ingredients)
-        all_TPs.append(TP)
-        all_FPs.append(FP)
-        all_TNs.append(TN)
-        all_FNs.append(FN)
-        all_accuracies.append(accuracy)
-        all_precisions.append(precision)
-        all_recalls.append(recall)
-        all_f1s.append(f1)
+        indicators = calculate_metrics(predicted, true_list, all_ingredients)
+        indicators_list.append(indicators)
 
-    avg_TP = np.mean(all_TPs)
-    avg_FP = np.mean(all_FPs)
-    avg_TN = np.mean(all_TNs)
-    avg_FN = np.mean(all_FNs)
-    avg_accuracy = np.mean(all_accuracies)
-    avg_precisions = np.mean(all_precisions)
-    avg_recalls = np.mean(all_recalls)
-    avg_f1 = np.mean(all_f1s)
+    indicators_array = np.array(indicators_list)
 
-    confusion_mat = np.array([[avg_TP, avg_FN], [avg_FP, avg_TN]])
+    avg_indicators_values = np.mean(indicators_array, axis=0)
+    avg_indicators = PerformanceIndicators(*avg_indicators_values)
 
-    return confusion_mat, avg_accuracy, avg_precisions, avg_recalls, avg_f1
+    confusion_mat = np.array([[avg_indicators.TP, avg_indicators.FN], [avg_indicators.FP, avg_indicators.TN]])
+
+    return EvaluationResult(confusion_mat, avg_indicators.accuracy, avg_indicators.precision, avg_indicators.recall, avg_indicators.f1)
 
 
 def is_allergen_present(ingredient, allergen, algorithm, threshold):
@@ -321,7 +308,7 @@ def main():
             df_amostra[f'alergenos_{algorithm.value}'] = detected_allergens.apply(
                 lambda x: [detected[0] for detected in x])
             metrics = evaluate_algorithm(df_amostra, algorithm.value)
-            avg_f1 = metrics[-1]
+            avg_f1 = metrics.f1
             if avg_f1 > best_f1:
                 best_f1 = avg_f1
                 best_threshold = threshold
