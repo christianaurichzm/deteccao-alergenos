@@ -51,6 +51,10 @@ def extract_ingredients(text):
     return [ingredient.strip() for ingredient in re.split(pattern, text)]
 
 
+def normalize_thresold(value):
+    return value * 100
+
+
 def levenshtein_distance(ingredient, allergen):
     return fuzz.ratio(ingredient, allergen)
 
@@ -60,7 +64,7 @@ def jaccard_similarity(ingredient, allergen):
     allergen_set = set(allergen)
     intersection = ingredient_set.intersection(allergen_set)
     union = ingredient_set.union(allergen_set)
-    return (len(intersection) / len(union)) * 100
+    return normalize_thresold(len(intersection) / len(union))
 
 
 def get_cached_transformation(sentence, transformation_func):
@@ -81,7 +85,7 @@ def spacy_similarity(ingredient, allergen):
     token2 = get_cached_transformation(allergen, model_spacy)
 
     if token1.has_vector and token2.has_vector:
-        similarity = token1.similarity(token2) * 100
+        similarity = normalize_thresold(token1.similarity(token2))
     else:
         similarity = 0
 
@@ -104,7 +108,7 @@ def fasttext_similarity(ingredient, allergen):
     token2 = get_cached_transformation(allergen, sentence_to_vector_fasttext)
     token1 = np.array(token1).reshape(1, -1)
     token2 = np.array(token2).reshape(1, -1)
-    return cossine_similarity_sklearn(token1, token2) * 100
+    return normalize_thresold(cossine_similarity_sklearn(token1, token2))
 
 
 def sentences_to_embeddings_bert(sentences):
@@ -118,7 +122,7 @@ def bert_similarity(ingredient, allergen):
     ingredient_embedding = get_cached_transformation(ingredient, sentences_to_embeddings_bert)
     allergen_embedding = get_cached_transformation(allergen, sentences_to_embeddings_bert)
 
-    return cosine_similarity_torch(ingredient_embedding, allergen_embedding) * 100
+    return normalize_thresold(cosine_similarity_torch(ingredient_embedding, allergen_embedding))
 
 
 def calculate_metrics(predicted, true_list, all_ingredients):
@@ -134,6 +138,7 @@ def calculate_metrics(predicted, true_list, all_ingredients):
     f1 = 2 * (precision * recall) / (precision + recall) if precision + recall != 0 else 0
 
     return PerformanceIndicators(TP, FP, TN, FN, accuracy, precision, recall, f1)
+
 
 def evaluate_algorithm(df, algorithm):
     indicators_list = []
