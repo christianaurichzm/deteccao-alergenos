@@ -21,9 +21,9 @@ import fasttext.util
 
 cache = cachetools.LFUCache(maxsize=1000)
 
-metrics = ['accuracy', 'precision', 'recall', 'f1']
-PerformanceIndicators = namedtuple('PerformanceIndicators', ['TP', 'FP', 'TN', 'FN', *metrics])
-EvaluationResult = namedtuple('EvaluationResult', ['confusion_mat', *metrics])
+evaluation_metrics = ['accuracy', 'precision', 'recall', 'f1']
+PerformanceIndicators = namedtuple('PerformanceIndicators', ['TP', 'FP', 'TN', 'FN', *evaluation_metrics])
+EvaluationResult = namedtuple('EvaluationResult', ['confusion_mat', *evaluation_metrics])
 
 
 class Algorithms(Enum):
@@ -37,9 +37,9 @@ class Algorithms(Enum):
 
 model_spacy = spacy.load('pt_core_news_md')
 
-FASTTEXT_LANG = "pt"
-fasttext.util.download_model(FASTTEXT_LANG, if_exists='ignore')
-model_fasttext = fasttext.load_model(f'cc.{FASTTEXT_LANG}.300.bin')
+MODEL_LANG = "pt"
+fasttext.util.download_model(MODEL_LANG, if_exists='ignore')
+model_fasttext = fasttext.load_model(f'cc.{MODEL_LANG}.300.bin')
 
 BERT_ARCH = "neuralmind/bert-large-portuguese-cased"
 tokenizer_bert = BertTokenizer.from_pretrained(BERT_ARCH)
