@@ -1,25 +1,18 @@
 from IPython.core.display_functions import display
-from tqdm import tqdm
 
-from gerador_conjuntos import gerador_conjuntos
-from ontology_operations import ontology, ONTOLOGY_PATH
+from data_preparation import preparar_dados
 from teste import teste, load_and_preprocess_sample
 from treinamento import treinamento, load_and_preprocess_data
 
 
-def preparar_dados():
-    gerador_conjuntos()
-    tqdm.pandas()
-    return load_and_preprocess_data()
-
-
 def main():
-    df = preparar_dados()
-    cleaned_allergens_set, allergen_mapping = treinamento(df)
-    df_amostra, extracted_ingredients_amostra = load_and_preprocess_sample()
-    teste(extracted_ingredients_amostra, cleaned_allergens_set, allergen_mapping, df_amostra)
+    preparar_dados()
+    df_treinamento = load_and_preprocess_data()
+    cleaned_allergens_set, allergen_mapping = treinamento(df_treinamento)
+    df_teste, extracted_ingredients_amostra = load_and_preprocess_sample()
+    teste(extracted_ingredients_amostra, cleaned_allergens_set, allergen_mapping, df_teste)
 
-    return df_amostra
+    return df_teste
 
 
 if __name__ == '__main__':

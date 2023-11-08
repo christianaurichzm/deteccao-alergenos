@@ -10,10 +10,14 @@ EvaluationResult = namedtuple('EvaluationResult', ['confusion_mat', *evaluation_
 
 
 def calculate_metrics(predicted, true_list, all_ingredients):
-    TP = len(set(predicted) & set(true_list))
-    FP = len(set(predicted) - set(true_list))
-    FN = len(set(true_list) - set(predicted))
-    TN = len(set(all_ingredients) - set(true_list) - set(predicted))
+    predicted_set = set(predicted)
+    true_set = set(true_list)
+    all_ingredients_set = set(all_ingredients)
+
+    TP = len(predicted_set & true_set)
+    FP = len(predicted_set - true_set)
+    FN = len(true_set - predicted_set)
+    TN = len(all_ingredients_set - true_set - predicted_set)
 
     total = TP + FP + FN + TN
     accuracy = (TP + TN) / total if total != 0 else 0
