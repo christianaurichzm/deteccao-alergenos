@@ -19,7 +19,7 @@ def plot_confusion_matrix(matrix, algorithm):
 
 
 def plot_metrics(avg_accuracy, avg_precisions, avg_recalls, avg_f1, algorithm):
-    metrics = ['Acurácia', 'Precisão', 'Revocação', 'Score F1']
+    metrics = ['Acurácia', 'Precisão', 'Recall', 'F1-Score']
     values = [avg_accuracy, avg_precisions, avg_recalls, avg_f1]
 
     plt.figure(figsize=(10, 6))
