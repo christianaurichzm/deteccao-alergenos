@@ -1,0 +1,21 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX food: <http://www.ufsc.br/food#>
+
+SELECT ?label
+WHERE {
+    ?individuo rdfs:label ?label .
+    {
+        ?individuo rdf:type food:Alergeno .
+    }
+    UNION
+    {
+        ?individuo rdf:type food:AlergenoPorDerivacao .
+        ?individuo rdfs:label ?label .
+    }
+    UNION
+    {
+        ?individuo rdf:type ?subClass .
+        ?subClass rdfs:subClassOf+ food:Alergeno .
+    }
+}

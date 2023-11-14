@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:food="http://www.ufsc.br/food#">
+    <Ontology/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ufsc.br/food#eDerivadoDe -->
+
+    <ObjectProperty rdf:about="http://www.ufsc.br/food#eDerivadoDe">
+        <rdfs:domain rdf:resource="http://www.ufsc.br/food#Alimento"/>
+        <rdfs:range rdf:resource="http://www.ufsc.br/food#Alimento"/>
+        <rdfs:label>é derivado de</rdfs:label>
+    </ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ufsc.br/food#Alergeno -->
+
+    <Class rdf:about="http://www.ufsc.br/food#Alergeno">
+        <rdfs:subClassOf rdf:resource="http://www.ufsc.br/food#Alimento"/>
+        <rdfs:label>Alérgeno</rdfs:label>
+    </Class>
+    
+
+
+    <!-- http://www.ufsc.br/food#AlergenoPorDerivacao -->
+
+    <Class rdf:about="http://www.ufsc.br/food#AlergenoPorDerivacao">
+        <equivalentClass>
+            <Restriction>
+                <onProperty rdf:resource="http://www.ufsc.br/food#eDerivadoDe"/>
+                <someValuesFrom rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+            </Restriction>
+        </equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.ufsc.br/food#Alimento"/>
+        <rdfs:label>Alérgeno por Derivação</rdfs:label>
+    </Class>
+    
+
+
+    <!-- http://www.ufsc.br/food#Alimento -->
+
+    <Class rdf:about="http://www.ufsc.br/food#Alimento">
+        <rdfs:label>Alimento</rdfs:label>
+    </Class>
+    
+
+
+    <!-- http://www.ufsc.br/food#Crustáceo -->
+
+    <Class rdf:about="http://www.ufsc.br/food#Crustáceo">
+        <rdfs:subClassOf rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Crustáceo</rdfs:label>
+    </Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ufsc.br/food#Amendoa -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Amendoa">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Amêndoa</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Amendoim -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Amendoim">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Amendoim</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Aveia -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Aveia">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Aveia</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Avelã -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Avelã">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Avelã</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Camarão -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Camarão">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Crustáceo"/>
+        <rdfs:label>Camarão</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Caranguejo -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Caranguejo">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Crustáceo"/>
+        <rdfs:label>Caranguejo</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Castanha -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Castanha">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Castanha</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Castanha-de-caju -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Castanha-de-caju">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Castanha-de-caju</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Castanha-do-brasil -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Castanha-do-brasil">
+        <sameAs rdf:resource="http://www.ufsc.br/food#Castanha-do-pará"/>
+        <rdfs:label>Castanha-do-brasil</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Castanha-do-pará -->
+
+    <rdf:Description rdf:about="http://www.ufsc.br/food#Castanha-do-pará"/>
+    
+
+
+    <!-- http://www.ufsc.br/food#Castanha-do-pará -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Castanha-do-pará">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Castanha-do-pará</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Centeio -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Centeio">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Centeio</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Cevada -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Cevada">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Cevada</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Lagosta -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Lagosta">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Crustáceo"/>
+        <rdfs:label>Lagosta</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Lagostim -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Lagostim">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Crustáceo"/>
+        <rdfs:label>Lagostim</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Leite -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Leite">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Leite</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Látex_natural -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Látex_natural">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Látex natural</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Macadamia -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Macadamia">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Macadâmia</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Nozes -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Nozes">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Nozes</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Ovo -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Ovo">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Ovo</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Pecã -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Pecã">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Pecã</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Peixe -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Peixe">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Peixe</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Pistache -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Pistache">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Pistache</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Siri -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Siri">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Crustáceo"/>
+        <rdfs:label>Siri</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Soja -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Soja">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Soja</rdfs:label>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.ufsc.br/food#Trigo -->
+
+    <NamedIndividual rdf:about="http://www.ufsc.br/food#Trigo">
+        <rdf:type rdf:resource="http://www.ufsc.br/food#Alergeno"/>
+        <rdfs:label>Trigo</rdfs:label>
+    </NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi -->
