@@ -5,7 +5,7 @@ from thefuzz import fuzz
 from transformers import BertTokenizer, BertModel
 
 from torch.nn.functional import cosine_similarity as cosine_similarity_torch
-from sklearn.metrics.pairwise import cosine_similarity as cossine_similarity_sklearn
+from sklearn.metrics.pairwise import cosine_similarity as cosine_similarity_sklearn
 
 from cache import get_cached_transformation
 
@@ -64,7 +64,7 @@ def fasttext_similarity(ingredient, allergen):
     token2 = get_cached_transformation(allergen, sentence_to_vector_fasttext)
     token1 = np.array(token1).reshape(1, -1)
     token2 = np.array(token2).reshape(1, -1)
-    return normalize_thresold(cossine_similarity_sklearn(token1, token2))
+    return normalize_thresold(cosine_similarity_sklearn(token1, token2))
 
 
 def sentences_to_embeddings_bert(sentences):
