@@ -130,3 +130,14 @@ dmypy.json
 
 # IDE
 .idea
+
+# Modelo neural treinado (binário grande, regenerável por bert_classificador.py)
+modelo_bert_alergenos/
+
+# Logs/artefatos de treino
+treino*.log
+treino.pid
+
+# Conjuntos derivados (regerados a partir do CSV)
+conjunto_treinamento.csv
+conjunto_teste.csv
