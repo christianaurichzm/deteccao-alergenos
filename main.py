@@ -1,20 +1,19 @@
-from IPython.core.display_functions import display
+"""
+Pipeline de detecção de alérgenos: reconstrói a ontologia OWL e compara os
+paradigmas de detecção contra o gabarito do Open Food Facts.
 
-from data_preparation import preparar_dados
-from teste import teste, load_and_preprocess_sample
-from treinamento import treinamento, load_and_preprocess_data
+Uso:
+    python3 main.py
+"""
+
+from ontologia_builder import construir
+from comparacao import main as rodar_comparacao
 
 
 def main():
-    preparar_dados()
-    df_treinamento = load_and_preprocess_data()
-    cleaned_allergens_set, allergen_mapping = treinamento(df_treinamento)
-    df_teste, extracted_ingredients_amostra = load_and_preprocess_sample()
-    teste(extracted_ingredients_amostra, cleaned_allergens_set, allergen_mapping, df_teste)
-
-    return df_teste
+    construir()
+    rodar_comparacao()
 
 
-if __name__ == '__main__':
-    result_df = main()
-    display(result_df)
+if __name__ == "__main__":
+    main()

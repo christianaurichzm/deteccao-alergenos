@@ -1,0 +1,672 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.ufsc.br/food"
+         xmlns="http://www.ufsc.br/food#">
+
+<owl:Ontology rdf:about="http://www.ufsc.br/food"/>
+
+<owl:ObjectProperty rdf:about="#eDerivadoDe">
+  <rdfs:domain rdf:resource="#Alimento"/>
+  <rdfs:range rdf:resource="#Alimento"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">é derivado de</rdfs:label>
+</owl:ObjectProperty>
+
+<owl:Class rdf:about="#Alimento">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Alimento</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#Alergeno">
+  <rdfs:subClassOf rdf:resource="#Alimento"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Alérgeno</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="#AlergenoPorDerivacao">
+  <rdfs:subClassOf rdf:resource="#Alimento"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Alimento"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#eDerivadoDe"/>
+          <owl:someValuesFrom rdf:resource="#Alergeno"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Alérgeno por Derivação</rdfs:label>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#Leite">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">leite</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gluten</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ovo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Amendoim">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">amendoim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">castanhas</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">peixe</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">crustaceos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">moluscos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gergelim">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gergelim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sulfitos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Mostarda">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mostarda</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Aipo">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">aipo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Tremoco">
+  <rdf:type rdf:resource="#Alergeno"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tremoco</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Lactose">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lactose</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Caseina">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">caseina</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Caseinato">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">caseinato</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_SoroDeLeite">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">soro de leite</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Lactosoro">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lactosoro</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Nata">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">nata</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_CremeDeLeite">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">creme de leite</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Manteiga">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">manteiga</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Queijo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">queijo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Requeijao">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">requeijao</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Iogurte">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">iogurte</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Coalhada">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coalhada</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_CompostoLacteo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">composto lacteo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_SolidosLacteos">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">solidos lacteos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_FermentoLacteo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">fermento lacteo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_FermentosLacteos">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">fermentos lacteos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Leitelho">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">leitelho</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Whey">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">whey</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Lacteo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lacteo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Lactea">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lactea</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_DoceDeLeite">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">doce de leite</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_LeiteCondensado">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">leite condensado</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Leite_Chantilly">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Leite"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">chantilly</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Trigo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">trigo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Semola">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">semola</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Semolina">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">semolina</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_FarinhaDeTrigo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">farinha de trigo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_FareloDeTrigo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">farelo de trigo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Cevada">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cevada</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Centeio">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">centeio</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Aveia">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">aveia</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Malte">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">malte</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Triticale">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">triticale</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_FarinhaDeRosca">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">farinha de rosca</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gluten_Cuscuz">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gluten"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">cuscuz</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_LecitinaDeSoja">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lecitina de soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_Lecitina">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lecitina</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_ProteinaDeSoja">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">proteina de soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_ExtratoDeSoja">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">extrato de soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_OleoDeSoja">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">oleo de soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_FarinhaDeSoja">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">farinha de soja</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_Tofu">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tofu</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Soja_Shoyu">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Soja"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">shoyu</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Ovos">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ovos</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_ClaraDeOvo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">clara de ovo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Gema">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gema</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Albumina">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">albumina</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Ovalbumina">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ovalbumina</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Lisozima">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lisozima</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ovo_Clara">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Ovo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">clara</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Amendoim_ManteigaDeAmendoim">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Amendoim"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">manteiga de amendoim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Amendoim_OleoDeAmendoim">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Amendoim"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">oleo de amendoim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Amendoim_PastaDeAmendoim">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Amendoim"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pasta de amendoim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Castanha">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">castanha</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_CastanhaDeCaju">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">castanha de caju</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_CastanhaDoPara">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">castanha do para</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_CastanhaDoBrasil">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">castanha do brasil</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Nozes">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">nozes</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Noz">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">noz</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Amendoa">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">amendoa</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Avela">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">avela</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Pistache">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pistache</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Macadamia">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">macadamia</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Peca">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">peca</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Castanhas_Pinoli">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Castanhas"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pinoli</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Bacalhau">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bacalhau</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Atum">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">atum</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Sardinha">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sardinha</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Anchova">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">anchova</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Salmao">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">salmao</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peixe_Pescado">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Peixe"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pescado</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Camarao">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">camarao</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Caranguejo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">caranguejo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Lagosta">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lagosta</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Siri">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">siri</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Lagostim">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lagostim</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Crustaceos_Crustaceo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Crustaceos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">crustaceo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Mexilhao">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mexilhao</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Ostra">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ostra</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Lula">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lula</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Polvo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">polvo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Molusco">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">molusco</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Vieira">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">vieira</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moluscos_Caracol">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Moluscos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">caracol</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gergelim_Sesamo">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gergelim"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sesamo</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gergelim_Tahine">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Gergelim"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tahine</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos_Sulfito">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Sulfitos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sulfito</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos_Metabissulfito">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Sulfitos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">metabissulfito</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos_Bissulfito">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Sulfitos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bissulfito</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos_DioxidoDeEnxofre">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Sulfitos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dioxido de enxofre</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sulfitos_AnidridoSulfuroso">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Sulfitos"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">anidrido sulfuroso</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Aipo_Salsao">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Aipo"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">salsao</rdfs:label>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Tremoco_Lupino">
+  <rdf:type rdf:resource="#Alimento"/>
+  <eDerivadoDe rdf:resource="#Tremoco"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lupino</rdfs:label>
+</owl:NamedIndividual>
+
+
+</rdf:RDF>
